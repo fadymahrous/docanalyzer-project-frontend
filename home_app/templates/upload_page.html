@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="upload-container">
+  <div class="upload-box">
+    <h2 class="upload-title">Upload Your Documents</h2>
+    <form method="post" enctype="multipart/form-data" class="upload-form">
+      {% csrf_token %}
+      {% for field in form %}
+        {% if field.name != "user" %}
+          <div class="form-field">
+            <label for="{{ field.id_for_label }}" class="field-label">{{ field.name|title }}</label>
+            {{ field }}
+          </div>
+        {% endif %}
+      {% endfor %}
+      <input type="hidden" name="user" value="{{ request.user.id }}">
+      <button type="submit" class="upload-btn">Upload Document</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% load static %}{% static 'css/upload_page.css' %}">
+{% endblock %} 

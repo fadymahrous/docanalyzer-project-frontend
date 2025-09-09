@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="docs-container">
+  <div class="doc-box">
+    <h2 class="doc-title">Edit Document</h2>
+    <div class="form-scroll-container">
+      <form action="{% url 'home_app:editdocument' file_key_passed=form.instance.file_key_id %}" method="post" class="doc-form">
+        {% csrf_token %}
+        <div class="form-content">
+          {{ form }}
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="doc-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% load static %}{% static 'css/documents.css' %}">
+<style>
+.form-scroll-container {
+  height: calc(100vh - 14rem); /* Account for container padding, title, and margins */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.25rem;
+}
+
+.form-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-scroll-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.form-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.form-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+</style>
+{% endblock %}

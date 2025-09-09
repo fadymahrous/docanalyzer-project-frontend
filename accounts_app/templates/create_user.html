@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-box">
+    <h2 class="auth-title">Create New Account</h2>
+    <div class="auth-form-container">
+      <form method="POST" class="auth-form">
+        {% csrf_token %}
+        {% for field in forms %}
+          <div class="form-field">
+            <label for="{{ field.id_for_label }}" class="field-label">{{ field.name|title }}</label>
+            {{ field }}
+          </div>
+        {% endfor %}
+        <input type="submit" value="Create Account" class="auth-btn">
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% load static %}{% static 'css/auth_pages.css' %}">
+{% endblock %} 

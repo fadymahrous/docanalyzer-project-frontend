@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-box">
+    <h2 class="auth-title">Sign In</h2>
+    <div class="auth-form-container">
+      <form method="POST" class="auth-form">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <input type="hidden" name="next" value="{{ next }}" />
+        <input type="submit" value="Sign In" class="auth-btn">
+      </form>
+      <div class="auth-links">
+        <a href="{% url 'accounts_app:create_view' %}" class="auth-link">Create New Account</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% load static %}{% static 'css/auth_pages.css' %}">
+{% endblock %} 

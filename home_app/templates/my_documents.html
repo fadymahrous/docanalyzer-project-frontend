@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="docs-container">
+	<div class="doc-box">
+		<h2 class="doc-title">CVs and Documents</h2>
+		<p class="doc-subtitle">Here you can find your uploaded documents.</p>
+
+		<div class="docs-split">
+			<div class="docs-left">
+				<div class="docs-list">
+					{% for doc in documents %}
+					<div class="doc-card">
+						<h3 class="doc-card-title">CV Owner: {{ doc.name }}</h3>
+						<div class="doc-meta">
+							<p>Phone: {{ doc.primary_phone }}</p>
+							<p>Email: {{ doc.primary_email }}</p>
+							<p>Country: {{ doc.country }}</p>
+							<p>LinkedIn: {{ doc.linkedin }}</p>
+							<p>GitHub: {{ doc.github }}</p>
+						</div>
+						<div class="doc-actions">
+							<button type="button" class="doc-btn secondary open-workexp" data-owner="{{ doc.name }}">Open Work Experience</button>
+							<div class="workexp-content" hidden>
+								{{ doc.workexperiance|linebreaksbr }}
+							</div>
+							<form action="{% url 'home_app:upload' %}" method="post" enctype="multipart/form-data">
+								{% csrf_token %}
+								<input type="hidden" name="file_key" value="{{ doc.file_key }}">
+								<button type="submit" class="doc-btn">Download</button>
+							</form>
+							<form action="{% url 'home_app:editdocument' file_key_passed=doc.file_key_id %}" method="get">
+								<button type="submit" class="doc-btn">Edit</button>
+							</form>
+							<form action="{% url 'home_app:mydocuments' %}" method="post">
+								{% csrf_token %}
+								<input type="hidden" name="action" value="delete">
+								<input type="hidden" name="file_key" value="{{ doc.file_key_id }}">
+								<button type="submit" class="doc-btn danger">Delete</button>
+							</form>
+						</div>
+					</div>
+					{% empty %}
+					<p class="no-docs">No documents uploaded yet.</p>
+					{% endfor %}
+				</div>
+			</div>
+			<div class="docs-right">
+				<div id="workexp-viewer" class="workexp-viewer">
+					<h3 class="viewer-title">Work Experience</h3>
+					<div class="viewer-body">Select a CV to view work experience.</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% load static %}{% static 'css/documents.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+	// Left list opens work experience in right viewer; only one at a time
+	document.addEventListener('DOMContentLoaded', function () {
+		const viewer = document.getElementById('workexp-viewer');
+		const viewerBody = viewer ? viewer.querySelector('.viewer-body') : null;
+		const viewerTitle = viewer ? viewer.querySelector('.viewer-title') : null;
+		const buttons = document.querySelectorAll('.open-workexp');
+
+		buttons.forEach(btn => {
+			btn.addEventListener('click', () => {
+				const card = btn.closest('.doc-card');
+				const content = card.querySelector('.workexp-content');
+				const owner = btn.getAttribute('data-owner') || 'Work Experience';
+				if (viewerBody && content) {
+					// Update viewer
+					viewerTitle.textContent = owner + ' - Work Experience';
+					viewerBody.innerHTML = content.innerHTML;
+					// Scroll to viewer on small screens
+					if (window.innerWidth < 1000) {
+						viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
+				}
+			});
+		});
+	});
+</script>
+{% endblock %} 
