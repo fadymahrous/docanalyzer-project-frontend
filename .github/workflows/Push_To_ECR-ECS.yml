@@ -66,7 +66,7 @@ jobs:
       - name: Render Amazon ECS task definition with new image
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
-        ## pin to a commit SHA in your repo
+        ### pin to a commit SHA in your repo
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION_PATH }}
           container-name: ${{ env.CONTAINER_NAME }}
